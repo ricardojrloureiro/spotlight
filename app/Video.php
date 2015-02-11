@@ -19,13 +19,22 @@ class Video extends Model {
                     $singleObj->data->media->oembed->provider_url, $match);
                 if (sizeof($match)) {  // procura o id do video
                     preg_match('/(?:v=)(.){11}/', $singleObj->data->media->oembed->url, $urlMatch);
-                    if (sizeof($urlMatch) > 0)
+                    if (sizeof($urlMatch) > 0){
+                        $description = 'undefined'; $title = 'undefined';
+                        if(isset($singleObj->data->media->oembed->description)) {
+                            $description = $singleObj->data->media->oembed->description;
+                        }
+
+                        if(isset($singleObj->data->media->oembed->title)) {
+                            $title = $singleObj->data->media->oembed->title;
+                        }
                         $ids[] = [
                             'id'=> substr($urlMatch[0], 2, 13),
                             'date'=> $singleObj->data->created,
-                            'description'=> $singleObj->data->media->oembed->description,
-                            'title'=> $singleObj->data->media->oembed->title
+                            'description'=> $description,
+                            'title'=> $title
                         ];
+                    }
                 }
             }
         }
